@@ -13,6 +13,8 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  *  ---------------------------
+ *  V1.0.2 (August 20th, 2015)
+ *	Commented out so of the debug logging to prevent spamming logs with unnecessary info.
  *  V1.0.1 (July 23, 2015)
  *  Minor Code Cleanup
  *  V1.0.0 (June 5, 2015)
@@ -174,11 +176,11 @@
     def estUsageClosure = { 
         response -> 
             log.debug "result: $response.data"
-            log.debug "Today's Estimated Usage: $response.data.day_kwh.estimate"
-            log.debug "Today's Estimated Cost: $response.data.day_tariff.estimate"
-            log.debug "This Month's Estimated Usage: $response.data.month_kwh.previousSum"
-            log.debug "This Month's Current Cost: $response.data.month_tariff.previousSum"
-            log.debug "This Month's Estimated Cost: $response.data.month_tariff.estimate"
+            //log.debug "Today's Estimated Usage: $response.data.day_kwh.estimate"
+            //log.debug "Today's Estimated Cost: $response.data.day_tariff.estimate"
+            //log.debug "This Month's Estimated Usage: $response.data.month_kwh.previousSum"
+            //log.debug "This Month's Current Cost: $response.data.month_tariff.previousSum"
+            //log.debug "This Month's Estimated Cost: $response.data.month_tariff.estimate"
             sendEvent(name: "todayUsage", value: response.data.day_kwh.estimate)
             sendEvent(name: "todayCost", value: response.data.day_tariff.estimate)
             sendEvent(name: "monthUsage", value: response.data.month_kwh.previousSum)
