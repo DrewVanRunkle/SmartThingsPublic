@@ -44,75 +44,75 @@
     	valueTile("energy", "device.energy") {
 			state "default", label: 'Right\nNow\n${currentValue} kWh',
             	foregroundColors:[
-            		[value: 1, color: "#000000"],
-            		[value: 1000, color: "#ffffff"]
+            		[value: 1, color: "#000000"], //Black
+            		[value: 1000, color: "#ffffff"] //White
             	], 
-            	foregroundColor: "#000000",
+            	foregroundColor: "#000000", //Black
 				backgroundColors:[
-					[value: 1, color: "#00cc00"],
-                    [value: 1000, color: "#79b821"],
-                   	[value: 1800, color: "#ffa81e"],
-					[value: 4000, color: "#fb1b42"]
+					[value: 1, color: "#00cc00"], //Light Green
+                    [value: 1000, color: "#79b821"], //Darker Green
+                   	[value: 1800, color: "#ffa81e"], //Orange
+					[value: 4000, color: "#fb1b42"] //Bright Red
 				]
         }
         
         valueTile("todayUsage", "device.todayUsage") {
 			state "default", label: 'Today\'s\nUsage\n${currentValue} kW',
             foregroundColors:[
-            		[value: 1, color: "#000000"],
-                    [value: 20, color: "#ffffff"]
+            		[value: 1, color: "#000000"],  //Black
+                    [value: 20, color: "#ffffff"]  //White
             	], 
-            foregroundColor: "#000000",
+            foregroundColor: "#000000", //Black
             backgroundColors:[
-            		[value: 0, color: "#153591"],
-					[value: 10, color: "#ffd500"],
-                    [value: 20, color: "#ffa500"],
-					[value: 30, color: "#bc2323"]
+            		[value: 0, color: "#153591"],  //Dark Blue
+					[value: 10, color: "#ffd500"],  //Yellow
+                    [value: 20, color: "#ffa500"],  //Orange
+					[value: 30, color: "#bc2323"]  //Dark Red
 				]
 			}
                 
         valueTile("todayCost", "device.todayCost") {
 			state "default", label: 'Today\'s\nUsage Cost\n \$${currentValue}',
             foregroundColors:[
-            		[value: 1, color: "#000000"],
-                    [value: 3, color: "#ffffff"]
+            		[value: 1, color: "#000000"],  //Black
+                    [value: 3, color: "#ffffff"]  //White
             	], 
-            foregroundColor: "#000000",
+            foregroundColor: "#000000",  //Black
             backgroundColors:[
-            		[value: 0, color: "#153591"],
-					[value: 3, color: "#ffd500"],
-                    [value: 5, color: "#ffa500"],
-					[value: 7, color: "#bc2323"]
+            		[value: 0, color: "#153591"],  //Dark Blue
+					[value: 3, color: "#ffd500"],  //Yellow
+                    [value: 5, color: "#ffa500"],  //Orange
+					[value: 7, color: "#bc2323"]  //Dark Red
 				]
             }
         
         valueTile("monthUsage", "device.monthUsage") {
 			state "default", label: 'This\nMonth\'s Use\n${currentValue} kW',
             foregroundColors:[
-            		[value: 1, color: "#000000"],
-                    [value: 200, color: "#ffffff"]
+            		[value: 1, color: "#000000"],  //Black
+                    [value: 200, color: "#ffffff"]  //White
             	], 
-            foregroundColor: "#000000",
+            foregroundColor: "#000000",  //Black
             backgroundColors:[
-            		[value: 0, color: "#153591"],
-					[value: 200, color: "#ffd500"],
-                    [value: 400, color: "#ffa500"],
-					[value: 600, color: "#bc2323"]
+            		[value: 0, color: "#153591"],  //Dark Blue
+					[value: 200, color: "#ffd500"],  //Yellow
+                    [value: 400, color: "#ffa500"],  //Orange
+					[value: 600, color: "#bc2323"]  //Dark Red
 				]
 			}    
         
         valueTile("monthCost", "device.monthCost") {
 			state "default", label: 'This\nMonth\'s Cost\n \$${currentValue}',
             foregroundColors:[
-            		[value: 1, color: "#000000"],
-                    [value: 100, color: "#ffffff"]
+            		[value: 1, color: "#000000"],  //Black
+                    [value: 100, color: "#ffffff"]  //White
             	], 
-            foregroundColor: "#000000",
+            foregroundColor: "#000000",  //Black
             backgroundColors:[
-            		[value: 0, color: "#153591"],
-					[value: 100, color: "#ffd500"],
-                    [value: 150, color: "#ffa500"],
-					[value: 200, color: "#bc2323"]
+            		[value: 0, color: "#153591"],  //Dark Blue
+					[value: 100, color: "#ffd500"],  //Yellow
+                    [value: 150, color: "#ffa500"],  //Orange
+					[value: 200, color: "#bc2323"]  //Dark Red
 				]
            }    
             
