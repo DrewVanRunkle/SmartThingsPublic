@@ -13,6 +13,8 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  *  ---------------------------
+ *  V1.0.2 (August 20th, 2015)
+ *  Commented out debug logging to prevent log spamming
  *  V1.0.1 (July 23, 2015)
  *  Minor Code Cleanup
  *  V1.0.0 (June 5, 2015)
@@ -149,9 +151,9 @@
     def readingClosure = { 
         response -> 
             log.debug "result: $response.data"
-            log.debug "last reading time: $response.data.last_reading_time"
-            log.debug "reading: $response.data.reading"
-            log.debug "Current Month: $curMonthName"
+            //log.debug "last reading time: $response.data.last_reading_time"
+            //log.debug "reading: $response.data.reading"
+            //log.debug "Current Month: $curMonthName"
             sendEvent(name: "energy", unit: "watts", value: response.data.reading)
             def tf = new java.text.SimpleDateFormat("MMM d, yyyy - h:mm:ss a")
         	tf.setTimeZone(TimeZone.getTimeZone("America/New_York"))
