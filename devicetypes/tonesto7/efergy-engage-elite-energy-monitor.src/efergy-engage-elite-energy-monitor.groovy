@@ -13,8 +13,6 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  *  ---------------------------
- *  V1.0.2 (August 20th, 2015)
- *	Commented out so of the debug logging to prevent spamming logs with unnecessary info.
  *  V1.0.1 (July 23, 2015)
  *  Minor Code Cleanup
  *  V1.0.0 (June 5, 2015)
