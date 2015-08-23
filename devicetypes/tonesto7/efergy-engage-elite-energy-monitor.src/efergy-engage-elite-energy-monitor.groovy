@@ -377,7 +377,7 @@ private getStatusData() {
 	def statusParams = [
     	uri: "https://engage.efergy.com",
     	path: "/mobile_proxy/getStatus",
-        query: ["token": "HvlWgeBp5xqZuUZiTxyDWdN4OwbkSmlP"],
+        query: ["token": token],
         contentType: 'json'
     ]
 	httpGet(statusParams, getStatusClosure)
