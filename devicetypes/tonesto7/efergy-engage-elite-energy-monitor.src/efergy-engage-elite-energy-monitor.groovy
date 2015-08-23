@@ -15,16 +15,17 @@
 *  ---------------------------
 *  v1.1 (August 23rd, 2015)
 *  	- Reworked and optimized most of http code to handle the different types of clamp types
+*   - Added Refresh button to manually update the info as you wish
 *  	- Added preference setting to enable to debug logging if you are having issues
-*  	- Added Hub information to preference screen
 *
 *  V1.0.2 (August 20th, 2015)
 *  Commented out debug logging to prevent log spamming
 *
 *  V1.0.1 (July 23, 2015)
 *  Minor Code Cleanup
+
 *  V1.0.0 (June 5, 2015)
-*  Initial Working Release 
+*  Initial Release 
 *  ---------------------------
 */
 import groovy.json.JsonSlurper
@@ -32,17 +33,6 @@ import groovy.json.JsonSlurper
 def devTypeVer() {"1.1"}
 def versionDate() {"8-23-2015"}
 	
-preferences {
-	section() {
-        paragraph "Efergy API Token Entry"
-        input "token", "text", title: "Access Token", required: true
-        input "showLogging", "bool", title: "Enable Debug Logging", required: false,  defaultValue: false, refreshAfterSelection: true
-        if(showLogging == true){ state.showLogging = true }
-        if(showLogging == false){ state.showLogging = false }
-        
-    }
-}
-
 metadata {
 	definition (name: "Efergy Engage Elite Energy Monitor", namespace: "tonesto7", author: "Anthony S.") {
 		capability "Energy Meter"
@@ -54,6 +44,7 @@ metadata {
 	}
 
 	tiles {
+    
     	valueTile("energy", "device.energy") {
 			state "default", label: 'Right\nNow\n${currentValue} kW',
             foregroundColors:[
@@ -150,12 +141,44 @@ metadata {
 	}
 }
 
+preferences {
+	section() {
+        paragraph "Efergy API Token Entry"
+        	input "token", "text", title: "Access Token", required: true
+        
+        paragraph "Enable this if you are having issues with tiles not updating...\n** This will create alot of Log Entries so its recommended that you disable when it's not needed **"
+        	input "showLogging", "bool", title: "Enable Debug Logging", required: false, displayDuringSetup: false, defaultValue: false, refreshAfterSelection: true
+        	if(showLogging == true){ 
+            	state.showLogging = true
+            	log.debug "Debug Logging Enabled!!!"    
+            }
+        	if(showLogging == false){ 
+            	state.showLogging = false 
+            	log.debug "Debug Logging Disabled!!!"                
+            }
+        //paragraph "This page will show you all of the info available from efergy..."
+       	//href "hubInfoPage", title:"Efergy Hub Info", description:"Tap to view Hub Info"
+    }
+    /*
+    section("Hub Info") {
+       	paragraph ("Hub Name: ${state.hubName}" + 
+            		"\nHub ID: ${state.hubId}" + 
+                    "\nHub Type: ${state.hubType}" +
+       				"\nHub Status: ${state.hubStatus}" + 
+        			"\nLast energy Reading: ${state.cidReading}" + 
+        			"\nHub Mac Address: ${state.hubMacAddr}"+
+        			"\nLast Checkin: ${state.hubTsHuman}" + 
+        			"\nHub Firmware: v${state.hubVersion}")
+    }
+    */
+}
+
 // parse events into attributes
 def parse(String description) {
 	log.debug "Parsing '${description}'"
 }
 	
- // refresh command
+// refresh command
 def refresh() {
 	log.debug "Refreshing data"
     getSummaryReading()
@@ -163,29 +186,44 @@ def refresh() {
     getStatusData()
 }
     
-// handle commands
+// Poll command
 def poll() {
+	log.debug "Poll command received..."
     refresh()
 }
-  
-    
+
+//Matches hubType to a full name
+def getHubName(String hubType) {
+	def hubName = ""
+    switch (hubType) {
+   		case 'EEEHub':
+       		hubName = "Efergy Engage Elite Hub"
+       	break
+        default:
+       		hubName "unknown"
+	}
+    state.hubName = hubName
+}
+
 // Get extended energy metrics
 private getEstUsage() {
 	def estUseClosure = { 
         estUseResp -> 
-            
+            //Sends extended metrics to tiles
             sendEvent(name: "todayUsage", value: estUseResp.data.day_kwh.estimate)
             sendEvent(name: "todayCost", value: estUseResp.data.day_tariff.estimate)
             sendEvent(name: "monthUsage", value: estUseResp.data.month_kwh.previousSum)
             sendEvent(name: "monthCost", value: estUseResp.data.month_tariff.previousSum)
             sendEvent(name: "monthEstCost", value: estUseResp.data.month_tariff.estimate)
+            
+            //Show Debug logging if enabled in preferences
             if(state.showLogging) {
-            	log.debug "Est Usage Result: $estUseResp.data"
-            	//log.debug "Today's Estimated Usage: $estUseResp.data.day_kwh.estimate"
-            	//log.debug "Today's Estimated Cost: $estUseResp.data.day_tariff.estimate"
-            	//log.debug "This Month's Estimated Usage: $estUseResp.data.month_kwh.previousSum"
-            	//log.debug "This Month's Current Cost: $estUseResp.data.month_tariff.previousSum"
-            	//log.debug "This Month's Estimated Cost: $estUseResp.data.month_tariff.estimate"
+            	log.debug "Est Usage Response: $estUseResp.data"
+            	log.debug "Today's Estimated Usage: $estUseResp.data.day_kwh.estimate"
+            	log.debug "Today's Estimated Cost: $estUseResp.data.day_tariff.estimate"
+            	log.debug "This Month's Estimated Usage: $estUseResp.data.month_kwh.previousSum"
+            	log.debug "This Month's Current Cost: $estUseResp.data.month_tariff.previousSum"
+            	log.debug "This Month's Estimated Cost: $estUseResp.data.month_tariff.estimate"
             }
 		}
         
@@ -248,6 +286,9 @@ private getSummaryReading() {
             //Save Cid Unit to device state
             state.cidUnit = cidUnit
             
+            //Save last Cid reading value to device state
+            state.cidReading = cidReading
+            
             //Formats epoch time to Human DateTime Format
             readingUpdated = "${tf.format(longTimeVal)}"
             
@@ -257,6 +298,7 @@ private getSummaryReading() {
             sendEvent(name: "cidType", value: state.cidType)
             sendEvent(name: "curMonthName", value: curMonth)
             
+			//Show Debug logging if enabled in preferences
             if(state.showLogging) {
             	log.debug "Summary Response: " + respData
 				log.debug "Cid Type: " + state.cidType
@@ -274,7 +316,6 @@ private getSummaryReading() {
         query: ["token": token],
         contentType: "json"
     	]
-    //"HvlWgeBp5xqZuUZiTxyDWdN4OwbkSmlP"
 	httpGet(summaryParams, summaryClosure)
 }
 
@@ -307,7 +348,9 @@ private getStatusData() {
             state.hubTsHuman = hubTsHuman.toString().replaceAll("\\[|\\{|\\]|\\}", "")
             state.hubType = hubType.toString().replaceAll("\\[|\\{|\\]|\\}", "")
             state.hubVersion = hubVersion.toString().replaceAll("\\[|\\{|\\]|\\}", "")
-            
+            state.hubName = getHubName(hubType)
+
+			//Show Debug logging if enabled in preferences            
             if (state.showLogging) {
             	log.debug "Status Response: " + respData
             	log.debug "Hub ID: " + state.hubId
@@ -316,6 +359,7 @@ private getStatusData() {
             	log.debug "Hub TimeStamp: " + state.hubTsHuman
             	log.debug "Hub Type: " + state.hubType
             	log.debug "Hub Firmware: " + state.hubVersion
+                log.debug "Hub Name: " + state.hubName
             }
     }
     //Http Get Parameters     
