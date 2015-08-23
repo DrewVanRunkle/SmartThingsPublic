@@ -122,7 +122,7 @@ metadata {
             
         valueTile("monthEstCost", "device.monthEstCost", width: 2, height: 1, decoration: "flat") {
 			state "default", label: 'This Month\'s\nEstimated Cost\n\$${currentValue}'
-		}    
+		}   
         
         valueTile("readingUpdated", "device.readingUpdated", width: 2, height: 1, decoration: "flat") {
 			state "default", label:'Last Updated:\n${currentValue}'
@@ -131,13 +131,21 @@ metadata {
         valueTile("readingUpdated", "device.readingUpdated", width: 2, height: 1, decoration: "flat") {
 			state "default", label:'Last Updated:\n${currentValue}'
 	    }
+        
+        valueTile("hubStatus", "device.hubStatus", width: 1, height: 1, decoration: "flat") {
+			state "default", label: 'Hub Status:\n${currentValue}'
+		}
+        
+        valueTile("hubVersion", "device.hubVersion", width: 1, height: 1, decoration: "flat") {
+			state "default", label: 'Hub Version:\n${currentValue}'
+		}
         
         standardTile("refresh", "command.refresh", inactiveLabel: false, decoration: "flat") {
 		state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
             
         main (["energy"])
-        details(["energy","todayUsage","todayCost","monthUsage","monthCost","monthEstCost","readingUpdated","refresh"])
+        details(["energy","todayUsage","todayCost","monthUsage","monthCost","monthEstCost","readingUpdated","refresh","hubStatus","hubVersion"])
 	}
 }
 
@@ -350,6 +358,9 @@ private getStatusData() {
             state.hubVersion = hubVersion.toString().replaceAll("\\[|\\{|\\]|\\}", "")
             state.hubName = getHubName(hubType)
 
+
+			sendEvent(name: "hubVersion", value: state.hubVersion)
+            sendEvent(name: "hubStatus", value: state.hubStatus)
 			//Show Debug logging if enabled in preferences            
             if (state.showLogging) {
             	log.debug "Status Response: " + respData
