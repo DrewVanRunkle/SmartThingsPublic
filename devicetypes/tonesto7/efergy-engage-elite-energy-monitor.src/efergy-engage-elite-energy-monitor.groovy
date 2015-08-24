@@ -44,18 +44,17 @@ metadata {
 	}
 
 	tiles {
-    
     	valueTile("energy", "device.energy") {
 			state "default", label: 'Right\nNow\n${currentValue} kW',
             foregroundColors:[
-            	[value: 1, color: "#000000"], //Black
-            	[value: 1000, color: "#ffffff"] //White
+            	//[value: 1, color: "#000000"], //Black
+            	[value: 1, color: "#ffffff"] //White
             ], 
             foregroundColor: "#000000", //Black
 			backgroundColors:[
 				[value: 1, color: "#00cc00"], //Light Green
-                [value: 1000, color: "#79b821"], //Darker Green
-                [value: 1800, color: "#ffa81e"], //Orange
+                [value: 2000, color: "#79b821"], //Darker Green
+                [value: 3000, color: "#ffa81e"], //Orange
 				[value: 4000, color: "#fb1b42"] //Bright Red
 			]
         }
@@ -63,13 +62,14 @@ metadata {
         valueTile("todayUsage", "device.todayUsage") {
 			state "default", label: 'Today\'s\nUsage\n${currentValue} kWh',
             foregroundColors:[
-            	[value: 1, color: "#000000"],  //Black
-                [value: 20, color: "#ffffff"]  //White
+            	//[value: 1, color: "#000000"],  //Black
+                [value: 1, color: "#ffffff"]  //White
             ], 
             foregroundColor: "#000000", //Black
             backgroundColors:[
             	[value: 0, color: "#153591"],  //Dark Blue
-				[value: 10, color: "#ffd500"],  //Yellow
+                [value: 10, color: "#778899"],  //light slate grey
+				[value: 15, color: "#ffd500"],  //Yellow
                 [value: 20, color: "#ffa500"],  //Orange
 				[value: 30, color: "#bc2323"]  //Dark Red
 			]
@@ -78,8 +78,8 @@ metadata {
         valueTile("todayCost", "device.todayCost") {
 			state "default", label: 'Today\'s\nUsage Cost\n \$${currentValue}',
             foregroundColors:[
-            	[value: 1, color: "#000000"],  //Black
-                [value: 3, color: "#ffffff"]  //White
+            	//[value: 1, color: "#000000"],  //Black
+                [value: 1, color: "#ffffff"]  //White
             ], 
             foregroundColor: "#000000",  //Black
             backgroundColors:[
@@ -93,27 +93,27 @@ metadata {
         valueTile("monthUsage", "device.monthUsage") {
 			state "default", label: 'This\nMonth\'s Use\n${currentValue} kWh',
             foregroundColors:[
-            	[value: 1, color: "#000000"],  //Black
-                [value: 200, color: "#ffffff"]  //White
+            	//[value: 1, color: "#000000"],  //Black
+                [value: 1, color: "#ffffff"]  //White
             ], 
             foregroundColor: "#000000",  //Black
             backgroundColors:[
-            	[value: 0, color: "#153591"],  //Dark Blue
-				[value: 200, color: "#ffd500"],  //Yellow
-                [value: 400, color: "#ffa500"],  //Orange
-				[value: 600, color: "#bc2323"]  //Dark Red
+            	[value: 10, color: "#00cc00"],  //Dark Blue
+				[value: 400, color: "#ffd500"],  //Yellow
+                [value: 600, color: "#ffa500"],  //Orange
+				[value: 800, color: "#bc2323"]  //Dark Red
 			]
 		}    
         
         valueTile("monthCost", "device.monthCost") {
 			state "default", label: 'This\nMonth\'s Cost\n \$${currentValue}',
             foregroundColors:[
-            	[value: 1, color: "#000000"],  //Black
-                [value: 100, color: "#ffffff"]  //White
+            	//[value: 1, color: "#000000"],  //Black
+                [value: 1, color: "#ffffff"]  //White
             ], 
             foregroundColor: "#000000",  //Black
             backgroundColors:[
-            	[value: 0, color: "#153591"],  //Dark Blue
+            	[value: 50, color: "#153591"],  //Dark Blue
 				[value: 100, color: "#ffd500"],  //Yellow
                 [value: 150, color: "#ffa500"],  //Orange
 				[value: 200, color: "#bc2323"]  //Dark Red
