@@ -17,6 +17,7 @@
 *  	- Reworked and optimized most of http code to handle the different clamp types
 *   - Added Refresh button to manually update the info as you wish
 *  	- Added preference setting to enable to debug logging if you are having issues
+*	- Uploading to GitHub
 *
 *  V1.0.2 (August 20th, 2015)
 *  Commented out debug logging to prevent log spamming
