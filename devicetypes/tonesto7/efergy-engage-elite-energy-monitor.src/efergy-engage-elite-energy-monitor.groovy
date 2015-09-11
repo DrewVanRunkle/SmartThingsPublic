@@ -13,20 +13,15 @@
 *  for the specific language governing permissions and limitations under the License.
 *
 *  ---------------------------
+*  v1.1 (Sept 11th, 2015)
+*	- Trying to update the tile view to reflect the new app features
+*  	- Add Month Name to tiles.
+*  
 *  v1.1 (August 23rd, 2015)
 *  	- Reworked and optimized most of http code to handle the different clamp types
 *   - Added Refresh button to manually update the info as you wish
 *  	- Added preference setting to enable to debug logging if you are having issues
 *	- Uploading to GitHub
-*
-*  V1.0.2 (August 20th, 2015)
-*  Commented out debug logging to prevent log spamming
-*
-*  V1.0.1 (July 23, 2015)
-*  Minor Code Cleanup
-
-*  V1.0.0 (June 5, 2015)
-*  Initial Release 
 *  ---------------------------
 */
 import groovy.json.JsonSlurper
@@ -41,109 +36,54 @@ metadata {
         capability "Power Meter"
         capability "Polling"
         capability "Refresh"
-        command "refresh"
         command "poll"
+        command "refresh"
 	}
-
-	tiles {
-    	valueTile("energy", "device.energy") {
-			state "default", label: 'Right\nNow\n${currentValue} kW',
-            foregroundColors:[
-            	//[value: 1, color: "#000000"], //Black
-            	[value: 1, color: "#ffffff"] //White
-            ], 
-            foregroundColor: "#000000", //Black
-			backgroundColors:[
-				[value: 1, color: "#00cc00"], //Light Green
-                [value: 2000, color: "#79b821"], //Darker Green
-                [value: 3000, color: "#ffa81e"], //Orange
-				[value: 4000, color: "#fb1b42"] //Bright Red
-			]
-        }
+    
+	tiles (scale: 2) {
+    	
+        multiAttributeTile(name:"richpower", type:"generic", width:6, height:4) {
+    		tileAttribute("device.power", key: "PRIMARY_CONTROL") {
+      			attributeState "default", label: '${currentValue} W', icon: "https://cdn4.iconfinder.com/data/icons/miu/22/circle_dashboard_meter_fuel_gauge-128.png", wordWrap: true, 
+                foregroundColor: "#000000",
+                backgroundColors:[
+					[value: 1, color: "#00cc00"], //Light Green
+                	[value: 2000, color: "#79b821"], //Darker Green
+                	[value: 3000, color: "#ffa81e"], //Orange
+					[value: 4000, color: "#fb1b42"] //Bright Red
+				]
+    		}
+			tileAttribute("device.todayUsage", key: "SECONDARY_CONTROL") {
+      			attributeState "default", label: '${currentValue}'
+            }
+  		}
         
-        valueTile("todayUsage", "device.todayUsage") {
-			state "default", label: 'Today\'s\nUsage\n${currentValue} kWh',
-            foregroundColors:[
-            	//[value: 1, color: "#000000"],  //Black
-                [value: 1, color: "#ffffff"]  //White
-            ], 
-            foregroundColor: "#000000", //Black
-            backgroundColors:[
-            	[value: 0, color: "#153591"],  //Dark Blue
-                [value: 10, color: "#778899"],  //light slate grey
-				[value: 15, color: "#ffd500"],  //Yellow
-                [value: 20, color: "#ffa500"],  //Orange
-				[value: 30, color: "#bc2323"]  //Dark Red
-			]
-		}
-                
-        valueTile("todayCost", "device.todayCost") {
-			state "default", label: 'Today\'s\nUsage Cost\n \$${currentValue}',
-            foregroundColors:[
-            	//[value: 1, color: "#000000"],  //Black
-                [value: 1, color: "#ffffff"]  //White
-            ], 
-            foregroundColor: "#000000",  //Black
-            backgroundColors:[
-            	[value: 0, color: "#153591"],  //Dark Blue
-				[value: 3, color: "#ffd500"],  //Yellow
-                [value: 5, color: "#ffa500"],  //Orange
-				[value: 7, color: "#bc2323"]  //Dark Red
-			]
-        }
-        
-        valueTile("monthUsage", "device.monthUsage") {
-			state "default", label: 'This\nMonth\'s Use\n${currentValue} kWh',
-            foregroundColors:[
-            	//[value: 1, color: "#000000"],  //Black
-                [value: 1, color: "#ffffff"]  //White
-            ], 
-            foregroundColor: "#000000",  //Black
-            backgroundColors:[
-            	[value: 10, color: "#00cc00"],  //Dark Blue
-				[value: 400, color: "#ffd500"],  //Yellow
-                [value: 600, color: "#ffa500"],  //Orange
-				[value: 800, color: "#bc2323"]  //Dark Red
-			]
+        valueTile("monthUsage", "device.monthUsage", width: 4, height: 2, decoration: "flat") {
+			state "default", label: '${currentValue}'
 		}    
         
-        valueTile("monthCost", "device.monthCost") {
-			state "default", label: 'This\nMonth\'s Cost\n \$${currentValue}',
-            foregroundColors:[
-            	//[value: 1, color: "#000000"],  //Black
-                [value: 1, color: "#ffffff"]  //White
-            ], 
-            foregroundColor: "#000000",  //Black
-            backgroundColors:[
-            	[value: 50, color: "#153591"],  //Dark Blue
-				[value: 100, color: "#ffd500"],  //Yellow
-                [value: 150, color: "#ffa500"],  //Orange
-				[value: 200, color: "#bc2323"]  //Dark Red
-			]
-        }    
-            
-        valueTile("monthEstCost", "device.monthEstCost", width: 2, height: 1, decoration: "flat") {
-			state "default", label: 'This Month\'s\nEstimated Cost\n\$${currentValue}'
+        valueTile("monthEstCost", "device.monthEstCost", width: 4, height: 2, decoration: "flat") {
+			state "default", label: '${currentValue}'
 		}   
         
-        valueTile("readingUpdated", "device.readingUpdated", width: 2, height: 1, decoration: "flat") {
-			state "default", label:'Last Updated:\n${currentValue}'
+        valueTile("readingUpdated", "device.readingUpdated", width: 6, height: 2, decoration: "flat") {
+			state "default", label:'${currentValue}'
 	    }
         
-        valueTile("hubStatus", "device.hubStatus", width: 1, height: 1, decoration: "flat") {
+        valueTile("hubStatus", "device.hubStatus", width: 2, height: 1, decoration: "flat") {
 			state "default", label: 'Hub Status:\n${currentValue}'
 		}
         
-        valueTile("hubVersion", "device.hubVersion", width: 1, height: 1, decoration: "flat") {
+        valueTile("hubVersion", "device.hubVersion", width: 2, height: 1, decoration: "flat") {
 			state "default", label: 'Hub Version:\n${currentValue}'
 		}
         
-        standardTile("refresh", "command.refresh", inactiveLabel: false, decoration: "flat") {
+        standardTile("refresh", "command.refresh", inactiveLabel: false, width: 2, height: 2, decoration: "flat") {
 		state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
-            
-        main (["energy"])
-        details(["energy","todayUsage","todayCost","monthUsage","monthCost","monthEstCost","readingUpdated","refresh","hubStatus","hubVersion"])
+        
+        main (["richpower"])
+        details(["richpower", "monthUsage", "monthEstCost", "readingUpdated", "refresh", "hubStatus", "hubVersion"])
 	}
 }
 
@@ -162,21 +102,7 @@ preferences {
             	state.showLogging = false 
             	log.debug "Debug Logging Disabled!!!"                
             }
-        //paragraph "This page will show you all of the info available from efergy..."
-       	//href "hubInfoPage", title:"Efergy Hub Info", description:"Tap to view Hub Info"
     }
-    /*
-    section("Hub Info") {
-       	paragraph ("Hub Name: ${state.hubName}" + 
-            		"\nHub ID: ${state.hubId}" + 
-                    "\nHub Type: ${state.hubType}" +
-       				"\nHub Status: ${state.hubStatus}" + 
-        			"\nLast energy Reading: ${state.cidReading}" + 
-        			"\nHub Mac Address: ${state.hubMacAddr}"+
-        			"\nLast Checkin: ${state.hubTsHuman}" + 
-        			"\nHub Firmware: v${state.hubVersion}")
-    }
-    */
 }
 
 // parse events into attributes
@@ -187,7 +113,7 @@ def parse(String description) {
 // refresh command
 def refresh() {
 	log.debug "Refreshing data"
-    getMonth()
+    getDayMonth()
     getSummaryReading()
  	getEstUsage()
     getStatusData()
@@ -198,12 +124,21 @@ def poll() {
 	log.debug "Poll command received..."
     refresh()
 }
-def getMonth() {
-	def date = new Date()
-    def sdf
-    sdf = new SimpleDateFormat("MMMM").format(date)
-    log.debug sdf
+
+//Converts Today's DateTime into Day of Week and Month Name ("September")
+def getDayMonth() {
+	def today = new Date()
+    def month
+    def day
+    month = new SimpleDateFormat("MMMM").format(today)
+    day = new SimpleDateFormat("EEEE").format(today)
+   
+    if (month != null && day != null) {
+    	state.monthName = month
+        state.dayOfWeek = day
+    }  
 }
+
 //Matches hubType to a full name
 def getHubName(String hubType) {
 	def hubName = ""
@@ -222,20 +157,18 @@ private getEstUsage() {
 	def estUseClosure = { 
         estUseResp -> 
             //Sends extended metrics to tiles
-            sendEvent(name: "todayUsage", value: estUseResp.data.day_kwh.estimate)
-            sendEvent(name: "todayCost", value: estUseResp.data.day_tariff.estimate)
-            sendEvent(name: "monthUsage", value: estUseResp.data.month_kwh.previousSum)
-            sendEvent(name: "monthCost", value: estUseResp.data.month_tariff.previousSum)
-            sendEvent(name: "monthEstCost", value: estUseResp.data.month_tariff.estimate)
+            sendEvent(name: "todayUsage", value: "Today\'s Usage: \$${estUseResp.data.day_tariff.estimate} (${estUseResp.data.day_kwh.estimate} kWh)")
+            sendEvent(name: "monthUsage", value: "${state.monthName} Usage\n\$${estUseResp.data.month_tariff.previousSum} (${estUseResp.data.month_kwh.previousSum} kWh)")
+            sendEvent(name: "monthEstCost", value: "${state.monthName}\'s Cost\n(Est.)\n\$${estUseResp.data.month_tariff.estimate}")
             
             //Show Debug logging if enabled in preferences
             if(state.showLogging) {
             	log.debug "Est Usage Response: $estUseResp.data"
             	log.debug "Today's Estimated Usage: $estUseResp.data.day_kwh.estimate"
             	log.debug "Today's Estimated Cost: $estUseResp.data.day_tariff.estimate"
-            	log.debug "This Month's Estimated Usage: $estUseResp.data.month_kwh.previousSum"
-            	log.debug "This Month's Current Cost: $estUseResp.data.month_tariff.previousSum"
-            	log.debug "This Month's Estimated Cost: $estUseResp.data.month_tariff.estimate"
+            	log.debug "${state.monthName}\'s Estimated Usage: $estUseResp.data.month_kwh.previousSum"
+            	log.debug "${state.monthName}\'s Current Cost: $estUseResp.data.month_tariff.previousSum"
+            	log.debug "${state.monthName}\'s Estimated Cost: $estUseResp.data.month_tariff.estimate"
             }
 		}
         
@@ -253,10 +186,8 @@ private getEstUsage() {
 */
 private getSummaryReading() {
     def today = new java.util.Date()
-    def sdf = new java.text.SimpleDateFormat("MMMM");
-    def tf = new java.text.SimpleDateFormat("MMM d, yyyy - h:mm:ss a")
+    def tf = new java.text.SimpleDateFormat("M/d/yyyy - h:mm:ss a")
     	tf.setTimeZone(TimeZone.getTimeZone("America/New_York"))
-    state.curMonthName = sdf.format(today)
     def cidVal = "" 
 	def cidData = [{}]
     def cidUnit = ""
@@ -299,16 +230,18 @@ private getSummaryReading() {
             state.cidUnit = cidUnit
             
             //Save last Cid reading value to device state
-            state.cidReading = cidReading
+            state.cidPowerReading = cidReading
             
             //Formats epoch time to Human DateTime Format
             readingUpdated = "${tf.format(longTimeVal)}"
             
             //Send Device events to tiles
-            sendEvent(name: "energy", unit: cidUnit, value: cidReading)
-        	sendEvent(name: "readingUpdated", value: readingUpdated)
+            sendEvent(name: "energy", unit: "kWh", value: cidReading.toInteger()/1000)
+            sendEvent(name: "power", unit: "W", value: cidReading)
+        	sendEvent(name: "readingUpdated", value: "Last Updated:\n${readingUpdated}")
             sendEvent(name: "cidType", value: state.cidType)
-            sendEvent(name: "curMonthName", value: curMonth)
+            sendEvent(name: "monthName", value: state.monthName)
+            sendEvent(name: "dayOfWeek", value: state.dayOfWeek)
             
 			//Show Debug logging if enabled in preferences
             if(state.showLogging) {
@@ -319,7 +252,8 @@ private getSummaryReading() {
             	log.debug "reading: " + cidReading
             	log.debug "Last Updated: " + readingUpdated
                 log.debug "Reading Age: " + cidReadingAge
-                log.debug "Current Month: ${state.curMonthName}"
+                log.debug "Current Month: ${state.monthName}"
+                log.debug "Day of Week: ${state.dayOfWeek}"
             }
     }
 	def summaryParams = [
