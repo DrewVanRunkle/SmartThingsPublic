@@ -30,9 +30,10 @@
 *  ---------------------------
 */
 import groovy.json.JsonSlurper
+import java.text.SimpleDateFormat 
     
-def devTypeVer() {"1.1"}
-def versionDate() {"8-23-2015"}
+def devTypeVer() {"1.2"}
+def versionDate() {"9-10-2015"}
 	
 metadata {
 	definition (name: "Efergy Engage Elite Energy Monitor", namespace: "tonesto7", author: "Anthony S.") {
@@ -129,10 +130,6 @@ metadata {
 			state "default", label:'Last Updated:\n${currentValue}'
 	    }
         
-        valueTile("readingUpdated", "device.readingUpdated", width: 2, height: 1, decoration: "flat") {
-			state "default", label:'Last Updated:\n${currentValue}'
-	    }
-        
         valueTile("hubStatus", "device.hubStatus", width: 1, height: 1, decoration: "flat") {
 			state "default", label: 'Hub Status:\n${currentValue}'
 		}
@@ -190,6 +187,7 @@ def parse(String description) {
 // refresh command
 def refresh() {
 	log.debug "Refreshing data"
+    getMonth()
     getSummaryReading()
  	getEstUsage()
     getStatusData()
@@ -200,7 +198,12 @@ def poll() {
 	log.debug "Poll command received..."
     refresh()
 }
-
+def getMonth() {
+	def date = new Date()
+    def sdf
+    sdf = new SimpleDateFormat("MMMM").format(date)
+    log.debug sdf
+}
 //Matches hubType to a full name
 def getHubName(String hubType) {
 	def hubName = ""
